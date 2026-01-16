@@ -16,6 +16,7 @@ import 'providers/language_provider.dart';
 import 'services/storage_service.dart';
 import 'services/quran_content_service.dart';
 import 'services/local_auth_service.dart'; // Local-only auth (no Firebase)
+import 'services/sync_service.dart'; // Stub service (Firebase disabled)
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -59,6 +60,7 @@ void main() async {
   // LOCAL AUTH SERVICE (Firebase disabled)
   print('📱 Using local-only auth service (no Firebase)');
   final authService = LocalAuthService();
+  final syncService = SyncService(); // Stub service
 
   runApp(
     MultiProvider(
@@ -68,6 +70,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SettingsProvider(storageService)),
         ChangeNotifierProvider(create: (_) => InsightsProvider(storageService)),
         Provider.value(value: authService), // LocalAuthService
+        Provider.value(value: syncService), // SyncService stub
         Provider.value(value: quranService),
       ],
       child: const MyApp(),

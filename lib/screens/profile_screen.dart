@@ -154,8 +154,8 @@ class ProfileScreen extends StatelessWidget {
         title: Text(localizations?.profile ?? 'Profile'),
         backgroundColor: AppTheme.warmCream,
       ),
-      body: Consumer<HatimProvider>(
-        builder: (context, hatimProvider, _) {
+      body: Consumer2<HatimProvider, SettingsProvider>(
+        builder: (context, hatimProvider, settingsProvider, _) {
           // Firebase disabled - use local profile only
           final displayName = settingsProvider.userName;
           final email = ''; // No email in local mode

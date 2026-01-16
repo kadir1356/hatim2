@@ -3,6 +3,12 @@
 /// All methods return null/empty as no cloud auth is available
 
 class LocalAuthService {
+  /// Check if user is signed in (always false in local mode)
+  bool get isSignedIn => false;
+
+  /// Get current user (always null in local mode)
+  dynamic get currentUser => null;
+
   /// Sign in anonymously (local mode - does nothing)
   Future<void> signInAnonymously() async {
     // Local mode - no Firebase
@@ -22,9 +28,6 @@ class LocalAuthService {
   Future<void> updateLastReadPage(int page, {int? juzNumber}) async {
     // Local mode - use Hive instead
   }
-
-  /// Get current user (always null in local mode)
-  dynamic get currentUser => null;
 
   /// Sign in with email/password (stub)
   Future<void> signInWithEmailPassword({

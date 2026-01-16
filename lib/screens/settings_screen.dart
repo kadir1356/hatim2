@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/hatim_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/language_provider.dart';
-// FIREBASE DISABLED
-// import '../services/firebase_auth_service.dart';
+import '../services/local_auth_service.dart'; // Local-only auth
 import '../services/sync_service.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
@@ -19,6 +18,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _hatimNameController = TextEditingController();
   bool _isSyncing = false;
+
+  // Local auth service (Firebase disabled)
+  LocalAuthService get authService => LocalAuthService();
 
   @override
   void dispose() {
