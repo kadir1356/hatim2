@@ -45,6 +45,9 @@ dependencies:
   intl: ^0.20.2
   path_provider: ^2.1.1
   
+  # WebView (for Android APK shell)
+  webview_flutter: ^4.4.2
+  
   # Localization
   flutter_localizations:
     sdk: flutter
