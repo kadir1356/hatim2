@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId = "com.pocketkhatm.app"
-        minSdkVersion = flutter.minSdkVersion
+        minSdkVersion = 23  // Firebase Auth requires min SDK 23
         targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
