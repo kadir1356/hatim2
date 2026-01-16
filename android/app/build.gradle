@@ -49,13 +49,13 @@ flutter {
 }
 
 dependencies {
-    // Import Firebase BOM to manage versions
-    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    // Firebase BOM 32.3.1 (Kotlin 1.8.x compatible)
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
     
     // Firebase dependencies (versions managed by BOM)
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     
-    // Kotlin stdlib
+    // Kotlin stdlib (explicit version)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
 }
