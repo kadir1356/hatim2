@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../services/firebase_auth_service.dart';
+// FIREBASE DISABLED
+// import 'package:firebase_auth/firebase_auth.dart';
+// import '../services/firebase_auth_service.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/app_logo.dart';

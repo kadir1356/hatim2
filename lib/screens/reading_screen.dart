@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// FIREBASE DISABLED
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/hatim_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/language_provider.dart';
 import '../services/quran_content_service.dart';
-import '../services/firebase_auth_service.dart';
+// import '../services/firebase_auth_service.dart'; // FIREBASE DISABLED
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/quran_data.dart';
@@ -57,7 +58,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
   bool _isZenMode = false;
   Map<int, String> _quranPages = {}; // Cache for loaded pages
   bool _isLoading = true;
-  FirebaseFirestore? get _firestore => kIsWeb ? null : FirebaseFirestore.instance;
+  // FIREBASE DISABLED
+  // FirebaseFirestore? get _firestore => kIsWeb ? null : FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -143,58 +145,14 @@ class _ReadingScreenState extends State<ReadingScreen> {
   }
 
   Future<void> _finishCommunityJuz() async {
-    if (!widget.isCommunityJuz || widget.communityJuzNumber == null || widget.communityHatimId == null) {
-      return;
-    }
-
-    if (_firestore == null) {
-      // Web mode - show message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Community Hatim is only available on mobile'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-      return;
-    }
-
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-
-      // Update status to 'completed_{uid}' in Firestore
-      await _firestore!
-          .collection('community_hatims')
-          .doc(widget.communityHatimId)
-          .update({
-        'juz_status.${widget.communityJuzNumber}': 'completed_${user.uid}',
-        'updated_at': FieldValue.serverTimestamp(),
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Juz ${widget.communityJuzNumber} completed! 🎉'),
-            backgroundColor: AppTheme.deepSageGreen,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-        
-        // Navigate back
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      print('Error finishing Juz: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+    // FIREBASE DISABLED - Community Hatim requires Firebase
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Community Hatim requires Firebase (currently disabled)'),
+          backgroundColor: Colors.orange,
+        ),
+      );
     }
   }
 
@@ -522,12 +480,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
                   _currentPage = index + 1; // Convert from 0-indexed to 1-indexed
                 });
                 
-                // Update last read page in Firestore
-                if (!kIsWeb) {
-                  final authService = Provider.of<FirebaseAuthService?>(context, listen: false);
-                  final juzNumber = _getCurrentJuz();
-                  authService?.updateLastReadPage(_currentPage, juzNumber: juzNumber);
-                }
+                // FIREBASE DISABLED - Last read page not synced to cloud
+                // Local tracking still works via Hive
               },
               itemBuilder: (context, index) {
                 final pageNumber = index + 1;

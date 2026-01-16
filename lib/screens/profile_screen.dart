@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../services/firebase_auth_service.dart';
+// FIREBASE DISABLED
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import '../services/firebase_auth_service.dart';
 import '../services/donation_service.dart';
 import '../providers/hatim_provider.dart';
 import '../providers/language_provider.dart';

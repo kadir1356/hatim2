@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/hatim_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/language_provider.dart';
-import '../services/firebase_auth_service.dart';
+// FIREBASE DISABLED
+// import '../services/firebase_auth_service.dart';
 import '../services/sync_service.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';

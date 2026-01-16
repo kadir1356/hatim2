@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import '../providers/hatim_provider.dart';
 import '../providers/insights_provider.dart';
 import '../providers/language_provider.dart';
-import '../services/firebase_auth_service.dart';
+// FIREBASE DISABLED
+// import '../services/firebase_auth_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/progress_ring.dart';
 import '../widgets/app_logo.dart';
