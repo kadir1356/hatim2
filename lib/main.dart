@@ -17,11 +17,13 @@ import 'services/storage_service.dart';
 import 'services/quran_content_service.dart';
 import 'l10n/app_localizations.dart';
 
-// Import Firebase only when not on web
-import 'services/firebase_auth_service.dart';
-import 'services/sync_service.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// FIREBASE TEMPORARILY DISABLED FOR STABLE ANDROID BUILD
+// import 'services/firebase_auth_service.dart';
+// import 'services/sync_service.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
+const bool firebaseEnabled = false; // Feature flag
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,27 +63,34 @@ void main() async {
     // Will use placeholder text
   }
   
-  // Firebase services (only on mobile, skip on web)
-  FirebaseAuthService? authService;
-  SyncService? syncService;
+  // FIREBASE DISABLED FOR STABLE ANDROID BUILD
+  // FirebaseAuthService? authService;
+  // SyncService? syncService;
   
-  if (!kIsWeb) {
-    try {
-      print('🔐 Initializing Firebase (mobile only)...');
-      await Firebase.initializeApp();
-      authService = FirebaseAuthService();
-      syncService = SyncService(authService, storageService);
-      print('✅ Firebase initialized successfully');
-    } catch (e) {
-      print('⚠️ Firebase error: $e');
-      authService = null;
-      syncService = null;
-    }
-  } else {
-    print('⏭️ Skipping Firebase (web mode)');
-    authService = null;
-    syncService = null;
-  }
+  // if (!kIsWeb && firebaseEnabled) {
+  //   try {
+  //     print('🔐 Initializing Firebase (mobile only)...');
+  //     await Firebase.initializeApp();
+  //     authService = FirebaseAuthService();
+  //     syncService = SyncService(authService, storageService);
+  //     print('✅ Firebase initialized successfully');
+  //   } catch (e) {
+  //     print('⚠️ Firebase error: $e');
+  //     authService = null;
+  //     syncService = null;
+  //   }
+  // } else {
+  //   print('⏭️ Skipping Firebase (web mode)');
+  //   authService = null;
+  //   syncService = null;
+  // }
+  
+  print('⏭️ Skipping Firebase (TEMPORARILY DISABLED)'
+);
+  
+  // Null values for Firebase services
+  const authService = null;
+  const syncService = null;
 
   runApp(
     MultiProvider(
@@ -160,34 +169,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
       return const MainScreen();
     }
 
-    // Mobile'da Firebase auth kontrolü yap
-    try {
-      // Sadece mobile'da Firebase kullan
-      final auth = FirebaseAuth.instance;
-      return StreamBuilder<User?>(
-        stream: auth.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              backgroundColor: AppTheme.warmCream,
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-
-          // If user is authenticated, show MainScreen
-          if (snapshot.hasData) {
-            return const MainScreen();
-          }
-
-          // If no user, force AuthScreen
-          return const AuthScreen();
-        },
-      );
-    } catch (e) {
-      print('Firebase auth error: $e');
-      // Firebase hatası durumunda MainScreen göster (offline mode)
-      return const MainScreen();
-    }
+    // FIREBASE DISABLED - Skip auth, go directly to MainScreen
+    return const MainScreen();
   }
 }
 
