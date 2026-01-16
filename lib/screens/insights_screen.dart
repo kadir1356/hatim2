@@ -24,14 +24,17 @@ class InsightsScreen extends StatelessWidget {
         ),
         body: Consumer<InsightsProvider>(
           builder: (context, insightsProvider, child) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Streak Card with Glowing Lantern
-                Container(
-                  padding: const EdgeInsets.all(32),
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Streak Card with Glowing Lantern
+                    Container(
+                      padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppTheme.warmCream,
                     borderRadius: BorderRadius.circular(24),
@@ -120,7 +123,8 @@ class InsightsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
           );
           },

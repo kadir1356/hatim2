@@ -7,6 +7,7 @@ import '../providers/language_provider.dart';
 import '../services/firebase_auth_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/progress_ring.dart';
+import '../widgets/app_logo.dart';
 import '../l10n/app_localizations.dart';
 import 'reading_screen.dart';
 
@@ -23,7 +24,15 @@ class HomeScreen extends StatelessWidget {
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(localizations.homeTitle),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AppLogo(size: 28),
+              const SizedBox(width: 12),
+              Text('POCKET HATIM'),
+            ],
+          ),
+          centerTitle: true,
         ),
         body: Consumer<HatimProvider>(
           builder: (context, hatimProvider, child) {
@@ -50,16 +59,19 @@ class HomeScreen extends StatelessWidget {
             );
           }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Progress Ring with minimalist design
-                Center(
-                  child: ProgressRing(
-                    progress: hatim.progressPercentage / 100,
-                    size: 220,
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Progress Ring with minimalist design
+                    Center(
+                      child: ProgressRing(
+                        progress: hatim.progressPercentage / 100,
+                        size: 180,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -81,9 +93,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 32),
+                  const SizedBox(height: 20),
 
                 // Continue Reading Button (from Firestore or Local)
                 if (!kIsWeb)
@@ -189,10 +201,10 @@ class HomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                    ),
-                const SizedBox(height: 24),
+                      ),
+                  const SizedBox(height: 16),
 
-                // Daily Streak with Glowing Lantern
+                  // Daily Streak with Glowing Lantern
                 Consumer<InsightsProvider>(
                   builder: (context, insightsProvider, child) {
                     return Container(
@@ -245,11 +257,11 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     );
-                  },
-                ),
-                const SizedBox(height: 24),
+                    },
+                  ),
+                  const SizedBox(height: 16),
 
-                // Quick Stats - Minimalist
+                  // Quick Stats - Minimalist
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -291,8 +303,10 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
+          ),
           );
           },
         ),

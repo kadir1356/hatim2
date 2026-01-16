@@ -62,7 +62,7 @@ class AppTheme {
         centerTitle: true,
         scrolledUnderElevation: 0,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: warmCream,
         elevation: 0,
         shape: RoundedRectangleBorder(

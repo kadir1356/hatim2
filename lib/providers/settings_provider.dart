@@ -14,6 +14,7 @@ class SettingsProvider with ChangeNotifier {
   bool get notificationsEnabled => _settings.notificationsEnabled;
   String? get notificationTime => _settings.notificationTime;
   bool get fullFocusMode => _settings.fullFocusMode;
+  String get userName => _settings.userName;
 
   Future<void> updateFontSize(double size) async {
     _settings = _settings.copyWith(fontSize: size);
@@ -35,6 +36,12 @@ class SettingsProvider with ChangeNotifier {
 
   Future<void> updateFullFocusMode(bool enabled) async {
     _settings = _settings.copyWith(fullFocusMode: enabled);
+    await _storageService.saveSettings(_settings);
+    notifyListeners();
+  }
+
+  Future<void> updateUserName(String name) async {
+    _settings = _settings.copyWith(userName: name);
     await _storageService.saveSettings(_settings);
     notifyListeners();
   }

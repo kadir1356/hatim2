@@ -129,6 +129,7 @@ class StorageService {
       'notificationsEnabled': settings.notificationsEnabled,
       'notificationTime': settings.notificationTime,
       'fullFocusMode': settings.fullFocusMode,
+      'userName': settings.userName,
     };
   }
 
@@ -138,6 +139,7 @@ class StorageService {
       notificationsEnabled: json['notificationsEnabled'] ?? true,
       notificationTime: json['notificationTime'],
       fullFocusMode: json['fullFocusMode'] ?? false,
+      userName: json['userName'] ?? 'User',
     );
   }
 

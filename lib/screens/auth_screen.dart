@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firebase_auth_service.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/app_logo.dart';
 
 class AuthScreen extends StatefulWidget {
   final VoidCallback? onSkip;
@@ -114,8 +115,10 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: AppTheme.warmCream,
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
             child: Form(
               key: _formKey,
               child: Column(
@@ -123,21 +126,17 @@ class _AuthScreenState extends State<AuthScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Logo/Title
-                  Icon(
-                    Icons.menu_book,
-                    size: 80,
-                    color: AppTheme.deepSageGreen,
-                  ),
-                  const SizedBox(height: 16),
+                  const AppLogo(size: 60),
+                  const SizedBox(height: 12),
                   Text(
-                    'Hatim Tracker',
+                    'POCKET HATIM',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
                           color: AppTheme.deepSageGreen,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 32),
 
                   // Display Name (only for signup)
                   if (!_isLogin) ...[
@@ -283,6 +282,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                 ],
+              ),
               ),
             ),
           ),

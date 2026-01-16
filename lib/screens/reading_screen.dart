@@ -711,31 +711,60 @@ class _ReadingScreenState extends State<ReadingScreen> {
   }
 
   Widget _buildQuranPage(int pageNumber, String pageText) {
+    // Extract Bismillah from the text
+    String? bismillah;
+    String mainText = pageText;
+    
+    // Regex to match Bismillah (بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ)
+    final bismillahPattern = RegExp(r'بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ');
+    final match = bismillahPattern.firstMatch(pageText);
+    
+    if (match != null) {
+      bismillah = match.group(0);
+      // Remove Bismillah from main text
+      mainText = pageText.replaceFirst(bismillahPattern, '').trim();
+    }
+    
     return Container(
       padding: EdgeInsets.only(
-        left: 32,
-        right: 32,
-        top: _isZenMode ? 60 : 24,
-        bottom: _isZenMode ? 60 : 100, // Extra space for bottom navigation
+        left: 20,
+        right: 20,
+        top: _isZenMode ? 40 : 16,
+        bottom: _isZenMode ? 40 : 80, // Extra space for bottom navigation
       ),
       child: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Arabic Quran Text
+              // Bismillah at the top (if exists) - RED color
+              if (bismillah != null) ...[
+                SelectableText(
+                  bismillah,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.rtl,
+                  style: AppTheme.arabicTextStyle(
+                    fontSize: 28.0,
+                    height: 1.8,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+              
+              // Arabic Quran Text (without Bismillah)
               SelectableText(
-                pageText,
+                mainText,
                 textAlign: TextAlign.center,
                 textDirection: TextDirection.rtl, // RTL for Arabic text
                 style: AppTheme.arabicTextStyle(
-                  fontSize: 28.0, // Large, clear font
-                  height: 2.2, // Generous line height for Harakat
+                  fontSize: 24.0, // Slightly smaller for web
+                  height: 2.0, // Generous line height for Harakat
                   color: AppTheme.softCharcoal,
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
 
               // Page Number (subtle)
               if (_isZenMode)

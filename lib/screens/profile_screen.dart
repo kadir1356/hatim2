@@ -7,6 +7,7 @@ import '../services/firebase_auth_service.dart';
 import '../services/donation_service.dart';
 import '../providers/hatim_provider.dart';
 import '../providers/language_provider.dart';
+import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/progress_ring.dart';
@@ -28,43 +29,60 @@ class ProfileScreen extends StatelessWidget {
           title: Text(localizations?.profile ?? 'Profile'),
           backgroundColor: AppTheme.warmCream,
         ),
-        body: Consumer<HatimProvider>(
-          builder: (context, hatimProvider, child) {
+        body: Consumer2<HatimProvider, SettingsProvider>(
+          builder: (context, hatimProvider, settingsProvider, child) {
             final hatim = hatimProvider.activeHatim;
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 60,
+            final userName = settingsProvider.userName;
+            
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
                     backgroundColor: AppTheme.deepSageGreen,
-                    child: const Text(
-                      'U',
-                      style: TextStyle(
+                    child: Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : 'U',
+                      style: const TextStyle(
                         fontSize: 48,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Web User',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppTheme.deepSageGreen,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
+                    const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        userName,
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              color: AppTheme.deepSageGreen,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.edit, size: 20),
+                        color: AppTheme.deepSageGreen,
+                        onPressed: () => _showEditNameDialog(context, settingsProvider),
+                        tooltip: 'Edit name',
+                      ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
                   Text(
                     'Sign in on mobile for full features',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppTheme.softCharcoal.withOpacity(0.7),
                         ),
                   ),
-                  if (hatim != null) ...[
-                    const SizedBox(height: 32),
+                    if (hatim != null) ...[
+                      const SizedBox(height: 20),
                     Card(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -113,12 +131,14 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    ],
+                    // Sadaqah/Support Section (Web User)
+                    const SizedBox(height: 20),
+                    _buildSadaqahSection(context),
                   ],
-                  // Sadaqah/Support Section (Web User)
-                  const SizedBox(height: 32),
-                  _buildSadaqahSection(context),
-                ],
+                ),
               ),
+            ),
             );
           },
         ),
@@ -578,5 +598,66 @@ class ProfileScreen extends StatelessWidget {
         );
       }
     }
+  }
+
+  void _showEditNameDialog(BuildContext context, SettingsProvider settingsProvider) {
+    final TextEditingController nameController = TextEditingController(
+      text: settingsProvider.userName,
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.warmCream,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          'Edit Your Name',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppTheme.deepSageGreen,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'Enter your name',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppTheme.deepSageGreen),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppTheme.deepSageGreen, width: 2),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppTheme.softCharcoal.withOpacity(0.7)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newName = nameController.text.trim();
+              if (newName.isNotEmpty) {
+                settingsProvider.updateUserName(newName);
+                Navigator.of(context).pop();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.deepSageGreen,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
   }
 }
