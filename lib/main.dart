@@ -15,15 +15,8 @@ import 'providers/insights_provider.dart';
 import 'providers/language_provider.dart';
 import 'services/storage_service.dart';
 import 'services/quran_content_service.dart';
+import 'services/local_auth_service.dart'; // Local-only auth (no Firebase)
 import 'l10n/app_localizations.dart';
-
-// FIREBASE TEMPORARILY DISABLED FOR STABLE ANDROID BUILD
-// import 'services/firebase_auth_service.dart';
-// import 'services/sync_service.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-
-const bool firebaseEnabled = false; // Feature flag
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,34 +56,9 @@ void main() async {
     // Will use placeholder text
   }
   
-  // FIREBASE DISABLED FOR STABLE ANDROID BUILD
-  // FirebaseAuthService? authService;
-  // SyncService? syncService;
-  
-  // if (!kIsWeb && firebaseEnabled) {
-  //   try {
-  //     print('🔐 Initializing Firebase (mobile only)...');
-  //     await Firebase.initializeApp();
-  //     authService = FirebaseAuthService();
-  //     syncService = SyncService(authService, storageService);
-  //     print('✅ Firebase initialized successfully');
-  //   } catch (e) {
-  //     print('⚠️ Firebase error: $e');
-  //     authService = null;
-  //     syncService = null;
-  //   }
-  // } else {
-  //   print('⏭️ Skipping Firebase (web mode)');
-  //   authService = null;
-  //   syncService = null;
-  // }
-  
-  print('⏭️ Skipping Firebase (TEMPORARILY DISABLED)'
-);
-  
-  // Null values for Firebase services
-  const authService = null;
-  const syncService = null;
+  // LOCAL AUTH SERVICE (Firebase disabled)
+  print('📱 Using local-only auth service (no Firebase)');
+  final authService = LocalAuthService();
 
   runApp(
     MultiProvider(
@@ -99,8 +67,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => HatimProvider(storageService)),
         ChangeNotifierProvider(create: (_) => SettingsProvider(storageService)),
         ChangeNotifierProvider(create: (_) => InsightsProvider(storageService)),
-        if (authService != null) Provider.value(value: authService),
-        if (syncService != null) Provider.value(value: syncService),
+        Provider.value(value: authService), // LocalAuthService
         Provider.value(value: quranService),
       ],
       child: const MyApp(),

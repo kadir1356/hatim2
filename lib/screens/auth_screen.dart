@@ -43,66 +43,19 @@ class _AuthScreenState extends State<AuthScreen> {
     });
 
     try {
-      // Web'de Firebase auth çalışmıyor - skip callback'i çağır
-      if (kIsWeb && widget.onSkip != null) {
+      // Firebase disabled - skip to main app
+      if (widget.onSkip != null) {
         widget.onSkip!();
         return;
       }
-
-      if (kIsWeb) {
-        return; // Web'de auth yapma
-      }
-
-      final authService = Provider.of<FirebaseAuthService?>(context, listen: false);
       
-      if (authService == null) {
-        setState(() {
-          _errorMessage = 'Authentication service not available. Please try again later.';
-          _isLoading = false;
-        });
-        return;
-      }
-      
-      if (_isLogin) {
-        await authService.signInWithEmailPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
-      } else {
-        await authService.signUpWithEmailPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-          displayName: _displayNameController.text.trim(),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Authentication failed';
-      switch (e.code) {
-        case 'weak-password':
-          errorMessage = 'Password is too weak';
-          break;
-        case 'email-already-in-use':
-          errorMessage = 'Email is already registered';
-          break;
-        case 'user-not-found':
-          errorMessage = 'No user found with this email';
-          break;
-        case 'wrong-password':
-          errorMessage = 'Incorrect password';
-          break;
-        case 'invalid-email':
-          errorMessage = 'Invalid email address';
-          break;
-        default:
-          errorMessage = e.message ?? 'Authentication failed';
-      }
+      // Local mode - no authentication
       setState(() {
-        _errorMessage = errorMessage;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString().replaceAll('Exception: ', '').replaceAll('Error: ', '');
+        _errorMessage = 'Local mode - authentication disabled';
         _isLoading = false;
       });
     }

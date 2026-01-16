@@ -98,66 +98,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                // Continue Reading Button (from Firestore or Local)
-                if (!kIsWeb)
-                  FutureBuilder<Map<String, dynamic>?>(
-                    future: Provider.of<FirebaseAuthService?>(context, listen: false)?.getLastReadPage(),
-                    builder: (context, snapshot) {
-                      final lastReadData = snapshot.data;
-                      final lastReadPage = lastReadData?['page'] ?? hatimProvider.lastReadPage?.pageNumber;
-                      
-                      if (lastReadPage != null && lastReadPage > 1) {
-                        return ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ReadingScreen(
-                                  initialPage: lastReadPage,
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.auto_stories),
-                          label: Text(
-                            '${localizations.continueReading}: ${localizations.page} $lastReadPage',
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: AppTheme.deepSageGreen,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ReadingScreen(initialPage: 1),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.book),
-                          label: Text(localizations.startReading),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: AppTheme.deepSageGreen,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  )
-                else
-                  // Web mode - use local storage only
-                  if (hatimProvider.lastReadPage != null)
+                // Continue Reading Button (Local storage only - Firebase disabled)
+                if (hatimProvider.lastReadPage != null)
                     ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(

@@ -146,60 +146,21 @@ class ProfileScreen extends StatelessWidget {
       );
     }
 
-    // Web'de Firebase kullanma
-    User? user;
-    try {
-      if (!kIsWeb) {
-        user = FirebaseAuth.instance.currentUser;
-      }
-    } catch (e) {
-      print('Error getting Firebase user: $e');
-      user = null;
-    }
-
+    // Firebase disabled - mobile mode removed
+    // Show the same UI as web (local-only profile)
     return Scaffold(
       backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         title: Text(localizations?.profile ?? 'Profile'),
         backgroundColor: AppTheme.warmCream,
       ),
-      body: user == null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.person_outline,
-                    size: 64,
-                    color: AppTheme.softCharcoal,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    localizations?.notSignedIn ?? 'Not signed in',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ],
-              ),
-            )
-          : kIsWeb
-              ? const SizedBox.shrink()
-              : StreamBuilder<DocumentSnapshot>(
-                  stream: kIsWeb 
-                      ? null 
-                      : FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(user!.uid)
-                          .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final userData = snapshot.data?.data() as Map<String, dynamic>?;
-                final displayName = userData?['display_name'] ?? user?.displayName ?? 'User';
-                final email = userData?['email'] ?? user?.email ?? '';
-                final joinedDate = userData?['joined_date'] as Timestamp?;
+      body: Consumer<HatimProvider>(
+        builder: (context, hatimProvider, _) {
+          // Firebase disabled - use local profile only
+          final displayName = settingsProvider.userName;
+          final email = ''; // No email in local mode
 
-                return SingleChildScrollView(
+          return SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -229,24 +190,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
 
-                      // Email
-                      Text(
-                        email,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppTheme.softCharcoal.withOpacity(0.7),
-                            ),
-                      ),
-                      const SizedBox(height: 8),
-
-                      // Joined Date
-                      if (joinedDate != null)
-                        Text(
-                          'Joined: ${_formatDate(joinedDate.toDate())}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppTheme.softCharcoal.withOpacity(0.6),
-                              ),
-                        ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16),
 
                       // Reading Progress
                       Consumer<HatimProvider>(
@@ -312,27 +256,17 @@ class ProfileScreen extends StatelessWidget {
                       _buildSadaqahSection(context),
                       const SizedBox(height: 24),
 
-                      // Sign Out Button
+                      // Sign Out Button (Local mode - no Firebase)
                       ElevatedButton.icon(
                         onPressed: () async {
-                          try {
-                            final authService =
-                                Provider.of<FirebaseAuthService?>(context, listen: false);
-                            if (authService != null) {
-                              await authService.signOut();
-                            }
-                            if (context.mounted) {
-                              Navigator.of(context).pushReplacementNamed('/auth');
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error signing out: ${e.toString()}'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
+                          // Local mode - no sign out needed
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Local mode - sign out not available'),
+                                backgroundColor: AppTheme.deepSageGreen,
+                              ),
+                            );
                           }
                         },
                         icon: const Icon(Icons.logout),

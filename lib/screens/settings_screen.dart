@@ -112,7 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         body: Consumer2<HatimProvider, SettingsProvider>(
           builder: (context, hatimProvider, settingsProvider, child) {
-            final authService = Provider.of<FirebaseAuthService?>(context, listen: false);
+            // Firebase disabled - no auth service
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
