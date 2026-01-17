@@ -10,7 +10,7 @@ apply plugin: 'kotlin-android'
 android {
     namespace = "com.pocketkhatm.app"
     compileSdk = 34
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "26.1.10909125"  // Pinned for GitHub Actions compatibility
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
