@@ -14,7 +14,7 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="/hatim2/">
+  <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -29,10 +29,44 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>hatim_tracker</title>
+  <title>Pocket Hatim</title>
   <link rel="manifest" href="manifest.json">
+  
+  <!-- Disable service worker caching for development -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
 </head>
 <body>
+  <!-- Loading indicator to prevent white screen -->
+  <div id="loading" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #FFFBF5;">
+    <div style="text-align: center;">
+      <div style="width: 50px; height: 50px; border: 4px solid #2E7D32; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+      <p style="margin-top: 20px; color: #2E7D32; font-family: Arial, sans-serif;">Loading Pocket Hatim...</p>
+    </div>
+  </div>
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      const loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.display = 'none';
+      }
+    });
+  </script>
+  
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
