@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Flutter base href placeholder - DO NOT REMOVE -->
-  <base href="/">
+  <!--
+    Flutter build sistemi bu placeholder'ı --base-href ile değiştirecek
+  -->
+  <base href="/hatim2/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -16,9 +18,11 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>Pocket Hatim v1.1</title>
+  <!-- ✅ Relative path - base href otomatik eklenir -->
   <link rel="manifest" href="manifest.json">
   
   <script>
+    // Eski Service Worker'ları temizle (Beyaz ekranı ve 404'ü önlemek için)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for(let registration of registrations) {
@@ -43,16 +47,27 @@
     }
   </style>
   
+  <!-- ✅ Relative path - base href otomatik eklenir -->
+  <script src="flutter_bootstrap.js" async></script>
+
   <script>
     // Flutter ilk kareyi çizdiğinde yükleme ekranını gizle
     window.addEventListener('flutter-first-frame', function() {
-      var loading = document.getElementById('loading');
+      const loading = document.getElementById('loading');
       if (loading) {
         loading.style.display = 'none';
       }
     });
+
+    // ✅ Güvenli hata kontrolü - 404 durumunda bilgilendirme
+    window.addEventListener('error', function(e) {
+      if (e.target && e.target.tagName === 'SCRIPT') {
+        const script = e.target;
+        if (script.src && script.src.includes('flutter_bootstrap')) {
+          console.error('Flutter bootstrap dosyası yüklenemedi. Path kontrolü yapın:', script.src);
+        }
+      }
+    }, true);
   </script>
-  
-  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
