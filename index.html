@@ -2,37 +2,72 @@
 <html>
 <head>
   <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
+    Flutter build sistemi bu placeholder'ı --base-href ile değiştirecek
   -->
   <base href="/hatim2/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Rose Game Studio - Pocket Hatim Application">
 
-  <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="hatim_tracker">
+  <meta name="apple-mobile-web-app-title" content="Pocket Hatim">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>hatim_tracker</title>
+  <title>Pocket Hatim v1.1</title>
+  <!-- ✅ Relative path - base href otomatik eklenir -->
   <link rel="manifest" href="manifest.json">
+  
+  <script>
+    // Eski Service Worker'ları temizle (Beyaz ekranı ve 404'ü önlemek için)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
 </head>
 <body>
+  <div id="loading" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #FFFBF5;">
+    <div style="text-align: center;">
+      <div style="width: 50px; height: 50px; border: 4px solid #2E7D32; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+      <p style="margin-top: 20px; color: #2E7D32; font-family: Arial, sans-serif; font-weight: bold;">Pocket Hatim Yükleniyor...</p>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  
+  <!-- ✅ Relative path - base href otomatik eklenir -->
   <script src="flutter_bootstrap.js" async></script>
+
+  <script>
+    // Flutter ilk kareyi çizdiğinde yükleme ekranını gizle
+    window.addEventListener('flutter-first-frame', function() {
+      const loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.display = 'none';
+      }
+    });
+
+    // ✅ Güvenli hata kontrolü - 404 durumunda bilgilendirme
+    window.addEventListener('error', function(e) {
+      if (e.target && e.target.tagName === 'SCRIPT') {
+        const script = e.target;
+        if (script.src && script.src.includes('flutter_bootstrap')) {
+          console.error('Flutter bootstrap dosyası yüklenemedi. Path kontrolü yapın:', script.src);
+        }
+      }
+    }, true);
+  </script>
 </body>
 </html>
